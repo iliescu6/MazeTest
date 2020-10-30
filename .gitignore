@@ -1,0 +1,25 @@
+Builds/
+
+# =============== #
+# Unity generated #
+# =============== #
+MazeColorReloaded/Temp/
+MazeColorReloaded/Library/
+MazeColorReloaded/Logs/
+
+# ===================================== #
+# Visual Studio / MonoDevelop generated #
+# ===================================== #
+ExportedObj/
+obj/
+*.svd
+*.userprefs
+MazeColorReloaded/*.csproj
+*.pidb
+*.suo
+*.sln
+*.sln.hide
+*.user
+*.unityproj
+*.booproj
+.vs
