@@ -22,9 +22,9 @@ public class Grid<Template>
     public Template[,] gridArray;
 
 
-    private TextMesh[,] debugGrid;
+    private TextMeshPro[,] debugGrid;
 
-    public Grid(int width, int height, float cellSize, Vector3 originPosition)
+    public Grid(int width, int height, float cellSize, Transform originPosition)
     {
         this.width = width;
         this.height = height;
@@ -33,20 +33,22 @@ public class Grid<Template>
         gridArray = new Template[width, height];
     }
 
-    public Grid(int width, int height, float cellSize, Vector3 originPosition, Func<Grid<Template>, int, int, Template> createGridObject)
+    public Grid(int width, int height, GameObject prefab, float cellSize, Transform originPosition, Func<Grid<Template>, int, int, Template> createGridObject)
     {
         this.width = width;
         this.height = height;
         this.cellSize = cellSize;
         this.originPostion = originPostion;
         gridArray = new Template[width, height];
-        debugGrid = new TextMesh[width, height];
+        
+        debugGrid = new TextMeshPro[width, height];
 
         for (int x = 0; x < gridArray.GetLength(0); x++)
         {
             for (int y = 0; y < gridArray.GetLength(1); y++)
             {
                 gridArray[x, y] = createGridObject(this, x, y);//default(Template);
+                GameObject.Instantiate(prefab, GetWorldPosition(x, y), Quaternion.identity);
                 debugGrid[x, y] = UtilsClass.CreateWorldText(gridArray[x, y]?.ToString(), null, GetWorldPosition(x, y) + new Vector3(cellSize, cellSize) * .5f, 30, Color.white, TextAnchor.MiddleCenter);
                 Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x, y + 1), Color.white, 100f);
                 Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x + 1, y), Color.white, 100f);
@@ -103,6 +105,6 @@ public class Grid<Template>
 
     public Template GetGridObject(int x, int y)
     {
-        return gridArray[x,y];
+        return gridArray[x, y];
     }
 }

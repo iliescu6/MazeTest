@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using TMPro;
 
 namespace CodeMonkey.Utils {
 
@@ -87,7 +88,7 @@ namespace CodeMonkey.Utils {
 
         // Creates a Text Mesh in the World and constantly updates it
         public static FunctionUpdater CreateWorldTextUpdater(Func<string> GetTextFunc, Vector3 localPosition, Transform parent = null) {
-            TextMesh textMesh = CreateWorldText(GetTextFunc(), parent, localPosition);
+            TextMeshPro textMesh = CreateWorldText(GetTextFunc(), parent, localPosition);
             return FunctionUpdater.Create(() => {
                 textMesh.text = GetTextFunc();
                 return false;
@@ -95,23 +96,26 @@ namespace CodeMonkey.Utils {
         }
 
         // Create Text in the World
-        public static TextMesh CreateWorldText(string text, Transform parent = null, Vector3 localPosition = default(Vector3), int fontSize = 40, Color? color = null, TextAnchor textAnchor = TextAnchor.UpperLeft, TextAlignment textAlignment = TextAlignment.Left, int sortingOrder = sortingOrderDefault) {
+        public static TextMeshPro CreateWorldText(string text, Transform parent = null, Vector3 localPosition = default(Vector3), int fontSize = 1, Color? color = null, TextAnchor textAnchor = TextAnchor.UpperLeft, TextAlignment textAlignment = TextAlignment.Left, int sortingOrder = sortingOrderDefault) {
             if (color == null) color = Color.white;
             return CreateWorldText(parent, text, localPosition, fontSize, (Color)color, textAnchor, textAlignment, sortingOrder);
         }
         
         // Create Text in the World
-        public static TextMesh CreateWorldText(Transform parent, string text, Vector3 localPosition, int fontSize, Color color, TextAnchor textAnchor, TextAlignment textAlignment, int sortingOrder) {
-            GameObject gameObject = new GameObject("World_Text", typeof(TextMesh));
+        public static TextMeshPro CreateWorldText(Transform parent, string text, Vector3 localPosition, int fontSize, Color color, TextAnchor textAnchor, TextAlignment textAlignment, int sortingOrder) {
+            GameObject gameObject = new GameObject("World_Text", typeof(TextMeshPro));
+
             Transform transform = gameObject.transform;
             transform.SetParent(parent, false);
             transform.localPosition = localPosition;
-            TextMesh textMesh = gameObject.GetComponent<TextMesh>();
-            textMesh.anchor = textAnchor;
-            textMesh.alignment = textAlignment;
+            TextMeshPro textMesh = gameObject.GetComponent<TextMeshPro>();
+            textMesh.enableAutoSizing = true;
+            textMesh.fontSizeMin = 1;
             textMesh.text = text;
             textMesh.fontSize = fontSize;
-            textMesh.color = color;
+            textMesh.color = Color.black;
+            RectTransform rt = textMesh.GetComponent<RectTransform>();
+            rt.sizeDelta = new Vector2(1, 1);
             textMesh.GetComponent<MeshRenderer>().sortingOrder = sortingOrder;
             return textMesh;
         }
@@ -124,7 +128,7 @@ namespace CodeMonkey.Utils {
         
         // Create a Text Popup in the World
         public static void CreateWorldTextPopup(Transform parent, string text, Vector3 localPosition, int fontSize, Color color, Vector3 finalPopupPosition, float popupTime) {
-            TextMesh textMesh = CreateWorldText(parent, text, localPosition, fontSize, color, TextAnchor.LowerLeft, TextAlignment.Left, sortingOrderDefault);
+            TextMeshPro textMesh = CreateWorldText(parent, text, localPosition, fontSize, color, TextAnchor.LowerLeft, TextAlignment.Left, sortingOrderDefault);
             Transform transform = textMesh.transform;
             Vector3 moveAmount = (finalPopupPosition - localPosition) / popupTime;
             FunctionUpdater.Create(delegate () {
